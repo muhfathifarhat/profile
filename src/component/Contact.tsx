@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
-import { FaGithub, FaWhatsapp } from "react-icons/fa";
+import { FaGithub, FaWhatsapp, FaLinkedin } from "react-icons/fa";
 
 interface ContactLink {
   icon: React.ReactNode;
@@ -12,23 +12,30 @@ interface ContactLink {
 
 const contactLinks: ContactLink[] = [
   {
-    icon: <Mail size={18} className="text-indigo-400" />,
-    label: "Gmail",
-    href: "mailto:youremail@gmail.com", // ganti dengan email asli kamu
-    hoverBorder: "hover:border-indigo-400/60",
-    hoverShadow: "hover:shadow-[0_0_20px_-5px_rgba(129,140,248,0.5)]",
-  },
-  {
     icon: <FaGithub size={18} className="text-gray-200" />,
     label: "GitHub",
-    href: "https://github.com/yourusername", // ganti dengan URL GitHub asli kamu
+    href: "https://github.com/muhfathifarhat", 
     hoverBorder: "hover:border-white/40",
     hoverShadow: "hover:shadow-[0_0_20px_-5px_rgba(255,255,255,0.35)]",
   },
   {
+    icon: <FaLinkedin size={18} className="text-sky-400" />,
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/muhamad-fathi-farhat-9882a9410/", 
+    hoverBorder: "hover:border-sky-400/60",
+    hoverShadow: "hover:shadow-[0_0_20px_-5px_rgba(56,189,248,0.5)]",
+  },
+  {
+    icon: <Mail size={18} className="text-indigo-400" />,
+    label: "Gmail",
+    href: "https://mail.google.com/mail/?view=cm&fs=1&to=muh.fathifarhat18@gmail.com", 
+    hoverBorder: "hover:border-indigo-400/60",
+    hoverShadow: "hover:shadow-[0_0_20px_-5px_rgba(129,140,248,0.5)]",
+  },
+  {
     icon: <FaWhatsapp size={18} className="text-emerald-400" />,
     label: "WhatsApp",
-    href: "https://wa.me/6285155259996", // ganti dengan nomor asli kamu
+    href: "https://wa.me/6285219864912",
     hoverBorder: "hover:border-emerald-400/60",
     hoverShadow: "hover:shadow-[0_0_20px_-5px_rgba(52,211,153,0.5)]",
   },
@@ -49,7 +56,7 @@ export default function ContactSection() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="flex flex-col items-center mb-12">
           <h2 className="text-4xl md:text-5xl font-black mb-4 [font-family:'Poppins',sans-serif] ">
-            Kontak Saya
+            Contact
           </h2>
           <span className="w-32 h-0.5 rounded-full bg-[#f7c200] " />
         </motion.div>

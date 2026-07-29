@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import type { IconType } from "react-icons";
-import { SiReact, SiTypescript, SiTailwindcss, SiPython, SiJavascript } from "react-icons/si";
+import { SiReact, SiJavascript, SiTypescript, SiTailwindcss, SiPython, SiMysql, SiPandas, } from "react-icons/si";
+import { FileSpreadsheet, BarChart3, PieChart } from "lucide-react";
 import { projects, certificates, type ProjectItem, type CertificateItem } from "./PortofolioData";
 
 interface TechItem {
@@ -17,6 +18,11 @@ const techStack: TechItem[] = [
   { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
   { name: "Tailwind CSS", icon: SiTailwindcss, color: "#38BDF8" },
   { name: "Python", icon: SiPython, color: "#3776AB" },
+  { name: "Excel", icon: FileSpreadsheet, color: "#217346" },
+  { name: "Power BI", icon: BarChart3, color: "#F2C811" },
+  { name: "SQL", icon: SiMysql, color: "#4479A1" },
+  { name: "Tableau", icon: PieChart, color: "#E97627" },
+  { name: "Pandas", icon: SiPandas, color: "#150458" },
 ];
 
 type TabType = "projects" | "certificates" | "techstack";
@@ -442,7 +448,7 @@ export default function PortfolioShowcase() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="flex flex-wrap justify-center gap-16">
+            className="grid grid-cols-2 sm:grid-cols-5 gap-x-8 sm:gap-x-16 gap-y-10 justify-items-center max-w-4xl mx-auto">
             {techStack.map((tech, i) => {
               const Icon = tech.icon;
               return (

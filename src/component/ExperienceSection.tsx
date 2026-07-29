@@ -72,7 +72,7 @@ const experiences: ExperienceCardData[] = [
 ];
 
 const NAVBAR_OFFSET = 96;
-const DESKTOP_QUERY = "(min-width: 768px)";
+const DESKTOP_QUERY = "(min-width: 1024px)";
 
 // Sama pola dengan `revealTransition` di About section: fade + slide up.
 const cardTransition = (delay = 0) => ({
@@ -259,7 +259,7 @@ export default function ExperienceSection() {
     };
   }, [isDesktop, measure, updatePin, onScroll]);
 
-  // ---- MOBILE: kartu biasa + fade/slide-in per kartu saat masuk viewport ----
+  // ---- MOBILE/TABLET (<1024px): kartu biasa + fade/slide-in per kartu saat masuk viewport ----
   if (!isDesktop) {
     return (
       <section id="experience" className="relative bg-black ">
@@ -289,7 +289,7 @@ export default function ExperienceSection() {
     );
   }
 
-  // ---- DESKTOP: pakai ScrollStack seperti sebelumnya ----
+  // ---- DESKTOP (>=1024px): pakai ScrollStack seperti sebelumnya ----
   return (
     <section id="experience" ref={sectionRef} className="relative bg-black">
       <div style={pinStyle} className="z-0 bg-black">

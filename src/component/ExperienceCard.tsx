@@ -40,7 +40,7 @@ export default function ExperienceCard({
           </div>
         </div>
 
-        <div className="flex sm:flex-col gap-4 sm:gap-1.5 sm:text-right shrink-0">
+        <div className="flex flex-col gap-1.5 sm:text-right shrink-0">
           <div className="flex items-center gap-1.5 text-gray-400 text-xs sm:text-sm font-mono">
             <Calendar className="w-3.5 h-3.5 shrink-0" />
             <span>{period}</span>

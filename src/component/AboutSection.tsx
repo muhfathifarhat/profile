@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import StatsCard from "./StatsCard.tsx";
 import ActionButtons from "./actionButton";
-import { MessageCircle } from "lucide-react";
+import { Mail } from "lucide-react";
 
 // Custom SVG icons (lucide-react sudah tidak menyediakan brand logos)
 const GithubIcon = ({ size = 15 }: { size?: number }) => (
@@ -352,7 +352,7 @@ function AboutSection() {
                 {/* Social Links */}
                 <div className="flex items-center gap-3">
                   <a
-                    href="https://github.com/USERNAME"
+                    href="https://github.com/muhfathifarhat"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="GitHub"
@@ -361,7 +361,7 @@ function AboutSection() {
                   </a>
 
                   <a
-                    href="https://linkedin.com/in/USERNAME"
+                    href="https://linkedin.com/in/muhamad-fathi-farhat-9882a9410"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="LinkedIn"
@@ -370,12 +370,10 @@ function AboutSection() {
                   </a>
 
                   <a
-                    href="https://wa.me/62XXXXXXXXXX"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="WhatsApp"
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=muh.fathifarhat18@gmail.com"
+                    aria-label="Gmail"
                     className="flex items-center justify-center w-8 h-8 rounded-full border border-white/15 text-gray-400 transition-all duration-200 hover:text-white hover:border-white/40 [&:hover_svg]:drop-shadow-[0_0_6px_white]">
-                    <MessageCircle size={15} strokeWidth={1.75} />
+                    <Mail size={15} strokeWidth={1.75} />
                   </a>
                 </div>
 
