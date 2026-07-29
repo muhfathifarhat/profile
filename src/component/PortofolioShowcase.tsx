@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
-import { ArrowUpRight } from "lucide-react";
 import type { IconType } from "react-icons";
 import { SiReact, SiTypescript, SiTailwindcss, SiPython, SiJavascript } from "react-icons/si";
 import { projects, certificates, type ProjectItem, type CertificateItem } from "./PortofolioData";
