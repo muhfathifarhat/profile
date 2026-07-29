@@ -37,7 +37,7 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
 
         {/* LANYARD STATIC - tampil di BAWAH 1024px (mobile & tablet) */}
         {!showIntro && (
-          <div className="block lg:hidden absolute top-0 left-0 right-0 h-[40vh] z-30 pointer-events-none flex justify-center pt-4">
+          <div className="lg:hidden absolute top-0 left-0 right-0 h-[40vh] z-30 pointer-events-none flex justify-center pt-4">
             <LanyardStatic strapHeight={120} cardWidth={170} cardHeight={230} />
           </div>
         )}

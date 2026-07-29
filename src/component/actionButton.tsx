@@ -1,5 +1,5 @@
 import { FileText } from "lucide-react";
-import { FolderOpen } from "lucide-react";
+import { User } from "lucide-react";
 
 export default function ActionButtons() {
   return (
@@ -14,9 +14,16 @@ export default function ActionButtons() {
         Download CV
       </a>
 
-      <button className="flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2 lg:py-2.5 rounded-md border border-white/65 bg-[#000000] text-white text-[11px] lg:text-xs font-mono whitespace-nowrap cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-white/100">
-        <FolderOpen size={14} className="shrink-0" />
-        View Project
+      <button
+        onClick={() =>
+          document.getElementById("contact")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          })
+        }
+        className="flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2 lg:py-2.5 rounded-md border border-white/65 bg-[#000000] text-white text-[11px] lg:text-xs font-mono whitespace-nowrap cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-white/100">
+        <User size={14} className="shrink-0" />
+        View Profile
       </button>
     </div>
   );

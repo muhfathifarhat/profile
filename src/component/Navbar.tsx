@@ -4,10 +4,8 @@ import {
   Home,
   User,
   Briefcase,
-  LayoutGrid,
   Mail,
   type LucideIcon,
-  Folder,
   FolderOpen,
 } from "lucide-react";
 
