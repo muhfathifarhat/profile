@@ -57,7 +57,7 @@ export default function Intro({ onComplete }: { onComplete: () => void }) {
                 color: word.color,
                 letterSpacing: "0.05em",
                 opacity: 0,
-                textShadow: `0 0 5px ${word.color}, 0 0 10px ${word.color}, 0 0 20px ${word.color}`,
+                textShadow: `0 0 2px ${word.color}, 0 0 10px ${word.color}, 0 0 10px ${word.color}`,
                 animation: `${isWelcome ? "introWordWelcome" : "introWordQuick"} ${duration}ms ${isWelcome ? "ease-out" : "linear"} forwards`,
                 animationDelay: `${START_TIMES[i]}ms`,
               }}>

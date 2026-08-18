@@ -332,7 +332,7 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             'transition-[transform,color,filter] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]',
             'motion-reduce:transition-none',
             'text-current group-hover/item:text-white',
-            'group-hover/item:[filter:drop-shadow(0_0_6px_rgba(255,255,255,0.8))_drop-shadow(0_0_14px_rgba(255,255,255,0.5))]',
+            'group-hover/item:[filter:drop-shadow(0_0_6px_rgba(255,255,255,0.8))_drop-shadow(0_0_3px_rgba(255,255,255,0.5))]',
             scaleOnHover && 'group-hover/item:scale-120'
           )}
           aria-hidden={!!(item as any).href && !(item as any).ariaLabel}

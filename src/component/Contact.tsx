@@ -47,7 +47,7 @@ export default function ContactSection() {
       {/* SECTION 4 - Kontak */}
       <section
         id="contact"
-        className="relative w-full min-h-[70vh] flex flex-col items-center justify-center px-4 py-24 bg-[#000000] text-white">
+        className="relative w-full min-h-[70vh] flex flex-col items-center justify-center px-4 py-24 bg-[#000000]">
         {/* Judul */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -55,7 +55,7 @@ export default function ContactSection() {
           viewport={{ once: false, amount: 0.5 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="flex flex-col items-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-black mb-4 [font-family:'Poppins',sans-serif] ">
+          <h2 className="text-4xl md:text-5xl font-black mb-4 [font-family:'Poppins',sans-serif] text-white">
             Contact
           </h2>
           <span className="w-32 h-0.5 rounded-full bg-[#f7c200] " />

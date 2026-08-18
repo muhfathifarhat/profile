@@ -18,7 +18,7 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
       {/* SECTION 1 */}
       <section
         id="home"
-        className="relative w-full lg:h-dvh text-white px-4 md:px-6 lg:px-10 xl:px-20 py-10 pb-32 lg:pb-0 overflow-x-hidden lg:overflow-hidden bg-black">
+        className="relative w-full lg:h-dvh text-white px-4 md:px-10 lg:px-10 xl:px-20 py-10 pb-32 lg:pb-0 overflow-x-hidden lg:overflow-hidden bg-black">
         {/* BACKGROUND GRID */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -37,20 +37,20 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
 
         {/* LANYARD STATIC - tampil di BAWAH 1024px (mobile & tablet) */}
         {!showIntro && (
-          <div className="lg:hidden absolute top-0 left-0 right-0 h-[40vh] z-30 pointer-events-none flex justify-center pt-4">
-            <LanyardStatic strapHeight={120} cardWidth={170} cardHeight={230} />
+          <div className="lg:hidden absolute top-0 left-0 right-0 h-[35vh] md:h-[42vh] z-30 pointer-events-none flex justify-center pt-4 md:pt-6">
+            <LanyardStatic strapHeight={100} cardWidth={170} cardHeight={230} />
           </div>
         )}
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 h-full gap-8 lg:gap-0">
-          <div className="block lg:hidden h-[40vh]" />
+          <div className="block lg:hidden h-[35vh] md:h-[42vh]" />
 
           {/* KIRI / BAWAH - Content */}
-          <div className="lg:col-span-6 flex flex-col justify-start items-center lg:items-end px-4 md:px-4 lg:px-8 gap-4 lg:h-full">
-            <div className="relative w-full max-w-sm lg:max-w-md min-h-[460px] lg:min-h-[525px] mt-16 lg:mt-24">
+          <div className="lg:col-span-6 flex flex-col justify-start items-center lg:items-end px-4 md:px-0 lg:px-8 gap-4 lg:h-full">
+            <div className="relative w-full max-w-sm md:max-w-2xl lg:max-w-md min-h-[460px] md:min-h-[560px] lg:min-h-[525px] mt-16 md:mt-10 lg:mt-24">
               {/* Outer Glow */}
               <div
-                className="absolute -top-16 -left-16 lg:-top-24 lg:-left-28 w-[420px] h-[420px] lg:w-[650px] lg:h-[650px] rounded-full pointer-events-none"
+                className="absolute -top-16 -left-16 md:-top-20 md:-left-20 lg:-top-24 lg:-left-28 w-[420px] h-[420px] md:w-[550px] md:h-[550px] lg:w-[650px] lg:h-[650px] rounded-full pointer-events-none"
                 style={{
                   background: `
                     radial-gradient(
@@ -67,7 +67,7 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
 
               {/* Inner Glow */}
               <div
-                className="absolute -top-4 -left-12 lg:-top-6 lg:-left-20 w-[220px] h-[220px] lg:w-[330px] lg:h-[330px] rounded-full pointer-events-none"
+                className="absolute -top-4 -left-12 md:-top-5 md:-left-16 lg:-top-6 lg:-left-20 w-[220px] h-[220px] md:w-[280px] md:h-[280px] lg:w-[330px] lg:h-[330px] rounded-full pointer-events-none"
                 style={{
                   background: `
                     radial-gradient(
@@ -81,15 +81,15 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
                   filter: "blur(35px)",
                 }}
               />
-              <motion.div className="absolute inset-0 px-5 sm:px-6 lg:px-8 py-6 lg:py-8 flex flex-col gap-3 lg:gap-4 items-start justify-start">
+              <motion.div className="absolute inset-0 px-5 sm:px-6 md:px-10 lg:px-8 py-6 md:py-10 lg:py-8 flex flex-col gap-3 md:gap-5 lg:gap-4 items-start justify-start">
                 {/* Badge HELLO, WELCOME */}
-                <div className="relative inline-block mb-2 lg:mb-3 -rotate-3 -translate-x-2">
-                  <span className="inline-block bg-[#ffffff1a] border border-white/10 text-white font-mono text-xs sm:text-sm lg:text-base tracking-wide px-3 lg:px-4 py-1 rounded-lg uppercase">
+                <div className="relative inline-block mb-2 md:mb-3 lg:mb-3 -rotate-3 -translate-x-2">
+                  <span className="inline-block bg-[#ffffff1a] border border-white/10 text-white font-mono text-xs sm:text-sm md:text-base lg:text-base tracking-wide px-3 md:px-4 lg:px-4 py-1 md:py-1.5 rounded-lg uppercase">
                     Hello, Welcome
                   </span>
                 </div>
 
-                <div className="flex justify-start w-full mb-4 lg:mb-6">
+                <div className="flex justify-start w-full mb-4 md:mb-6 lg:mb-6 scale-100 md:scale-125 lg:scale-100 origin-left">
                   <TrueFocus
                     sentence="Data|Analyst"
                     separator="|"
@@ -102,7 +102,7 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
                   />
                 </div>
 
-                <div className="flex justify-start w-full text-base lg:text-lg font-mono tracking-wide text-[#888888]">
+                <div className="flex justify-start w-full text-base md:text-xl lg:text-lg font-mono tracking-wide text-[#888888]">
                   <TextType
                     text={["Welcome!", "Fresh Graduate", "Junior Data Analyst"]}
                     typingSpeed={100}
@@ -113,14 +113,16 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
                   />
                 </div>
 
-                <p className="font-thin font-mono text-sm lg:text-base text-start leading-relaxed max-w-xs lg:max-w-sm text-[#b4b4b4]">
+                <p className="font-thin font-mono text-sm md:text-base lg:text-base text-start leading-relaxed max-w-xs md:max-w-md lg:max-w-sm text-[#b4b4b4]">
                   Database queries, Data processing, Data transformation, Data
                   analysis, Data visualization.
                 </p>
 
-                <TechBadges />
+                <div className="scale-100 md:scale-110 lg:scale-100 origin-left">
+                  <TechBadges />
+                </div>
 
-                <p className="font-mono font-light text-xs text-start leading-relaxed max-w-sm text-[#525252]">
+                <p className="font-mono font-light text-xs md:text-sm lg:text-xs text-start leading-relaxed max-w-sm text-[#525252]">
                   ↓ Explore my work
                 </p>
               </motion.div>
