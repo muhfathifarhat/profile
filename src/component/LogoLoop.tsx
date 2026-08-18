@@ -404,10 +404,6 @@ export const LogoLoop = React.memo<LogoLoopProps>(
           />
         );
 
-        const itemAriaLabel = isNodeItem
-          ? ((item as any).ariaLabel ?? (item as any).title)
-          : ((item as any).alt ?? (item as any).title);
-
         const inner = content;
 
         return (
