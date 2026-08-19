@@ -74,6 +74,16 @@ const experiences: ExperienceCardData[] = [
 const NAVBAR_OFFSET = 96;
 const DESKTOP_QUERY = "(min-width: 1024px)";
 
+// Style default (non-pinned) untuk title. Dipakai sebagai nilai reset
+// setiap kali kita KELUAR dari mode desktop, supaya tidak ada state
+// "fixed" yang ketinggalan / bocor ke mode mobile-tablet.
+const DEFAULT_PIN_STYLE: React.CSSProperties = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+};
+
 // Sama pola dengan `revealTransition` di About section: fade + slide up.
 const cardTransition = (delay = 0) => ({
   duration: 0.5,
@@ -179,16 +189,17 @@ export default function ExperienceSection() {
   const releasedRef = useRef(false);
   const rafId = useRef<number | null>(null);
 
+  // `null` = belum diketahui (sebelum matchMedia resolve / saat SSR).
+  // Kita anggap "bukan desktop" selama null, supaya render pertama
+  // SELALU jatuh ke cabang mobile/tablet yang statis -- tidak ada
+  // kemungkinan title sempat ke-render dengan style pin sebelum
+  // breakpoint terdeteksi.
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
   const scrollDirectionRef = useScrollDirection();
 
-  const [pinStyle, setPinStyle] = useState<React.CSSProperties>({
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-  });
+  const [pinStyle, setPinStyle] =
+    useState<React.CSSProperties>(DEFAULT_PIN_STYLE);
 
   useEffect(() => {
     const mql = window.matchMedia(DESKTOP_QUERY);
@@ -244,8 +255,21 @@ export default function ExperienceSection() {
     });
   }, [updatePin]);
 
+  // Efek pin HANYA aktif saat isDesktop === true. Saat mode berubah jadi
+  // false (mobile/tablet) ATAU masih null (belum terdeteksi), listener
+  // scroll/resize untuk logic pin dilepas total DAN state pin di-reset
+  // ke default. Ini mencegah:
+  //  1) listener lama tetap jalan lalu mengubah pinStyle walau sedang
+  //     dirender di cabang mobile (yang seharusnya tidak memakainya sama
+  //     sekali, tapi ini jaring pengaman ekstra),
+  //  2) state pinStyle "fixed" tersisa dari sesi desktop sebelumnya lalu
+  //     dipakai kembali secara keliru saat balik ke desktop.
   useEffect(() => {
-    if (!isDesktop) return;
+    if (!isDesktop) {
+      releasedRef.current = false;
+      setPinStyle(DEFAULT_PIN_STYLE);
+      return;
+    }
 
     measure();
     updatePin();
@@ -259,11 +283,16 @@ export default function ExperienceSection() {
     };
   }, [isDesktop, measure, updatePin, onScroll]);
 
-  // ---- MOBILE/TABLET (<1024px): kartu biasa + fade/slide-in per kartu saat masuk viewport ----
+  // ---- MOBILE/TABLET (<1024px, atau breakpoint belum terdeteksi):
+  // kartu biasa + fade/slide-in per kartu saat masuk viewport.
+  // Title di sini SELALU statis: tidak pernah memakai `pinStyle`,
+  // tidak ada `position: fixed/sticky` apa pun, className eksplisit
+  // `position-static` sebagai penegasan (default browser sudah static,
+  // ini murni jaga-jaga/dokumentasi visual di markup).
   if (!isDesktop) {
     return (
-      <section id="experience" className="relative bg-black ">
-        <div className="max-w-3xl mx-auto px-4 mt-5 pb-8">
+      <section id="experience" className="relative bg-black">
+        <div className="static max-w-3xl mx-auto px-4 mt-5 pb-8">
           <RevealOnScroll directionRef={scrollDirectionRef} amount="some">
             <span className="text-[#f7c200] text-xs tracking-widest font-mono uppercase [text-shadow:0_0_5px_#FF6600,0_0_15px_#FF6600,0_0_20px_rgba(247,194,0,0.6),0_0_35px_rgba(247,194,0,0.4)]">
               Journey
@@ -289,7 +318,7 @@ export default function ExperienceSection() {
     );
   }
 
-  // ---- DESKTOP (>=1024px): pakai ScrollStack seperti sebelumnya ----
+  // ---- DESKTOP (>=1024px): pakai ScrollStack + pin title seperti sebelumnya ----
   return (
     <section id="experience" ref={sectionRef} className="relative bg-black">
       <div style={pinStyle} className="z-0 bg-black">
