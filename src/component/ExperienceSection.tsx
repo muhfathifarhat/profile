@@ -278,7 +278,7 @@ export default function ExperienceSection() {
   if (!isDesktop) {
     return (
       <section id="experience" className="relative bg-black">
-        <div className="static max-w-3xl mx-auto px-4 mt-32 pb-8">
+        <div className="static max-w-3xl mx-auto px-4 mt-16 pb-8">
           <RevealOnScroll directionRef={scrollDirectionRef} amount="some">
             <span className="text-[#f7c200] text-xs tracking-widest font-mono uppercase [text-shadow:0_0_5px_#FF6600,0_0_15px_#FF6600,0_0_20px_rgba(247,194,0,0.6),0_0_35px_rgba(247,194,0,0.4)]">
               Journey
