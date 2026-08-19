@@ -255,15 +255,6 @@ export default function ExperienceSection() {
     });
   }, [updatePin]);
 
-  // Efek pin HANYA aktif saat isDesktop === true. Saat mode berubah jadi
-  // false (mobile/tablet) ATAU masih null (belum terdeteksi), listener
-  // scroll/resize untuk logic pin dilepas total DAN state pin di-reset
-  // ke default. Ini mencegah:
-  //  1) listener lama tetap jalan lalu mengubah pinStyle walau sedang
-  //     dirender di cabang mobile (yang seharusnya tidak memakainya sama
-  //     sekali, tapi ini jaring pengaman ekstra),
-  //  2) state pinStyle "fixed" tersisa dari sesi desktop sebelumnya lalu
-  //     dipakai kembali secara keliru saat balik ke desktop.
   useEffect(() => {
     if (!isDesktop) {
       releasedRef.current = false;
@@ -284,15 +275,10 @@ export default function ExperienceSection() {
   }, [isDesktop, measure, updatePin, onScroll]);
 
   // ---- MOBILE/TABLET (<1024px, atau breakpoint belum terdeteksi):
-  // kartu biasa + fade/slide-in per kartu saat masuk viewport.
-  // Title di sini SELALU statis: tidak pernah memakai `pinStyle`,
-  // tidak ada `position: fixed/sticky` apa pun, className eksplisit
-  // `position-static` sebagai penegasan (default browser sudah static,
-  // ini murni jaga-jaga/dokumentasi visual di markup).
   if (!isDesktop) {
     return (
       <section id="experience" className="relative bg-black">
-        <div className="static max-w-3xl mx-auto px-4 mt-5 pb-8">
+        <div className="static max-w-3xl mx-auto px-4 mt-5 pb-8 pt-32">
           <RevealOnScroll directionRef={scrollDirectionRef} amount="some">
             <span className="text-[#f7c200] text-xs tracking-widest font-mono uppercase [text-shadow:0_0_5px_#FF6600,0_0_15px_#FF6600,0_0_20px_rgba(247,194,0,0.6),0_0_35px_rgba(247,194,0,0.4)]">
               Journey
