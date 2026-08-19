@@ -178,7 +178,7 @@ function AboutSection() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative w-full md:h-dvh overflow-hidden bg-black text-white px-4 md:px-10 lg:px-20 py-10 md:py-0">
+      className="relative w-full lg:h-dvh lg:overflow-hidden bg-black text-white px-4 md:px-10 lg:px-20 py-10 lg:py-0">
       <div className="grid grid-cols-1 md:grid-cols-12 h-full gap-8 md:gap-0 items-start">
         {/* FOTO MOBILE */}
         <div className="relative flex md:hidden justify-center items-end h-[40vh] mt-20 pb-5">
