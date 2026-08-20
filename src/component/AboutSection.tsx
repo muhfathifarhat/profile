@@ -407,7 +407,7 @@ function AboutSection() {
 
         {/* STATS CARD */}
         <div className="md:pt-10 md:col-span-12 bg-black">
-          <div className="w-full md:w-4/5 mx-auto">
+          <div className="w-full md:w-10/12 lg:w-4/5 mx-auto">
             <StatsCard />
           </div>
         </div>
