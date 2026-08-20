@@ -51,7 +51,7 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
             <div className="relative w-full max-w-sm md:max-w-md lg:max-w-md min-h-[460px] md:min-h-[480px] lg:min-h-[525px] mt-16 md:mt-0 lg:mt-24">
               {/* Outer Glow */}
               <div
-                className="absolute -top-16 -left-16 md:-top-20 md:-left-16 lg:-top-24 lg:-left-28 w-[420px] h-[420px] md:w-[500px] md:h-[500px] lg:w-[650px] lg:h-[650px] rounded-full pointer-events-none"
+                className="absolute -top-16 -left-16 md:-top-20 md:-left-16 lg:-top-32 lg:-left-28 w-[420px] h-[420px] md:w-[500px] md:h-[500px] lg:w-[650px] lg:h-[650px] rounded-full pointer-events-none"
                 style={{
                   background: `
                     radial-gradient(
