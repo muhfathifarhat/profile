@@ -74,16 +74,6 @@ const experiences: ExperienceCardData[] = [
 const NAVBAR_OFFSET = 96;
 const DESKTOP_QUERY = "(min-width: 1024px)";
 
-// Style default (non-pinned) untuk title. Dipakai sebagai nilai reset
-// setiap kali kita KELUAR dari mode desktop, supaya tidak ada state
-// "fixed" yang ketinggalan / bocor ke mode mobile-tablet.
-const DEFAULT_PIN_STYLE: React.CSSProperties = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-};
-
 // Sama pola dengan `revealTransition` di About section: fade + slide up.
 const cardTransition = (delay = 0) => ({
   duration: 0.5,
@@ -189,17 +179,16 @@ export default function ExperienceSection() {
   const releasedRef = useRef(false);
   const rafId = useRef<number | null>(null);
 
-  // `null` = belum diketahui (sebelum matchMedia resolve / saat SSR).
-  // Kita anggap "bukan desktop" selama null, supaya render pertama
-  // SELALU jatuh ke cabang mobile/tablet yang statis -- tidak ada
-  // kemungkinan title sempat ke-render dengan style pin sebelum
-  // breakpoint terdeteksi.
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
   const scrollDirectionRef = useScrollDirection();
 
-  const [pinStyle, setPinStyle] =
-    useState<React.CSSProperties>(DEFAULT_PIN_STYLE);
+  const [pinStyle, setPinStyle] = useState<React.CSSProperties>({
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+  });
 
   useEffect(() => {
     const mql = window.matchMedia(DESKTOP_QUERY);
@@ -256,11 +245,7 @@ export default function ExperienceSection() {
   }, [updatePin]);
 
   useEffect(() => {
-    if (!isDesktop) {
-      releasedRef.current = false;
-      setPinStyle(DEFAULT_PIN_STYLE);
-      return;
-    }
+    if (!isDesktop) return;
 
     measure();
     updatePin();
@@ -274,11 +259,11 @@ export default function ExperienceSection() {
     };
   }, [isDesktop, measure, updatePin, onScroll]);
 
-  // ---- MOBILE/TABLET (<1024px, atau breakpoint belum terdeteksi):
+  // ---- MOBILE/TABLET (<1024px): kartu biasa + fade/slide-in per kartu saat masuk viewport ----
   if (!isDesktop) {
     return (
-      <section id="experience" className="relative bg-black">
-        <div className="static max-w-3xl mx-auto px-4 mt-16 pb-8">
+      <section id="experience" className="relative bg-black ">
+        <div className="max-w-3xl mx-auto px-4 mt-16 pb-8">
           <RevealOnScroll directionRef={scrollDirectionRef} amount="some">
             <span className="text-[#f7c200] text-xs tracking-widest font-mono uppercase [text-shadow:0_0_5px_#FF6600,0_0_15px_#FF6600,0_0_20px_rgba(247,194,0,0.6),0_0_35px_rgba(247,194,0,0.4)]">
               Journey
@@ -304,7 +289,7 @@ export default function ExperienceSection() {
     );
   }
 
-  // ---- DESKTOP (>=1024px): pakai ScrollStack + pin title seperti sebelumnya ----
+  // ---- DESKTOP (>=1024px): pakai ScrollStack seperti sebelumnya ----
   return (
     <section id="experience" ref={sectionRef} className="relative bg-black">
       <div style={pinStyle} className="z-0 bg-black">

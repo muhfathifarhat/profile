@@ -113,7 +113,7 @@ export default function StatsCards() {
       {/* PORTOFOLIO - tengah */}
       <motion.div
         onClick={() => goToPortfolioTab("projects")}
-        className="group relative overflow-hidden bg-[#1A1A1A] rounded-2xl p-5 flex flex-col justify-between min-h-[110px] cursor-pointer border border-transparent transition-all duration-300 hover:border-[#f7c200]/35 hover:shadow-[0_18px_30px_-12px_rgba(247,194,0,0.35)]"
+        className="group relative overflow-hidden bg-[#1A1A1A] rounded-2xl p-5 flex flex-col justify-between min-h-[110px] cursor-pointer border border-transparent transition-all duration-300 hover:border-[#f7c200]/35 hover:shadow-[0_12px_15px_-12px_rgba(247,194,0,0.35)]"
         initial={{ opacity: 0, y: 20 }}
         animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         whileHover={{ y: -6 }}
@@ -138,7 +138,7 @@ export default function StatsCards() {
       {/* CERTIFICATE - kanan */}
       <motion.div
         onClick={() => goToPortfolioTab("certificates")}
-        className="group relative overflow-hidden bg-[#1A1A1A] rounded-2xl p-5 flex flex-col justify-between min-h-[110px] cursor-pointer border border-transparent transition-all duration-300 hover:border-[#f7c200]/35 hover:shadow-[0_18px_30px_-12px_rgba(247,194,0,0.35)]"
+        className="group relative overflow-hidden bg-[#1A1A1A] rounded-2xl p-5 flex flex-col justify-between min-h-[110px] cursor-pointer border border-transparent transition-all duration-300 hover:border-[#f7c200]/35 hover:shadow-[0_12px_15px_-12px_rgba(247,194,0,0.35)]"
         initial={{ opacity: 0, y: 20 }}
         animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         whileHover={{ y: -6 }}
