@@ -105,7 +105,7 @@ export default function HeroSection({ showIntro }: HeroSectionProps) {
 
                 <div className="flex justify-start w-full text-base md:text-lg lg:text-lg font-mono tracking-wide text-[#888888]">
                   <TextType
-                    text={["Welcome!", "Fresh Graduate", "Junior Data Analyst"]}
+                    text={["Welcome!", "Fresh Graduate", "Data Analyst Enthusiast"]}
                     typingSpeed={100}
                     pauseDuration={1500}
                     showCursor

@@ -3,8 +3,13 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import type { IconType } from "react-icons";
 import { SiReact, SiJavascript, SiTypescript, SiTailwindcss, SiPython, SiMysql, SiPandas, } from "react-icons/si";
-import { FileSpreadsheet, BarChart3, PieChart } from "lucide-react";
+import { FileSpreadsheet, BarChart3, PieChart, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 import { projects, certificates, type ProjectItem, type CertificateItem } from "./PortofolioData";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface TechItem {
   name: string;
@@ -119,6 +124,121 @@ function RevealOnScroll({
   );
 }
 
+/**
+ * Thumbnail sertifikat untuk grid -- render halaman pertama PDF saja.
+ * Dipisah jadi komponen sendiri supaya tiap card independen memuat
+ * dokumennya dan tidak saling menunggu.
+ *
+ * PERBAIKAN: sebelumnya container pakai `aspect-[4/3]` tetap sementara
+ * lebar <Page> fixed (400), sehingga sertifikat berorientasi potret bisa
+ * terpotong di atas/bawah. Sekarang lebar <Page> mengikuti lebar container
+ * (ResizeObserver) dan gambar di-render dengan object-fit: contain lewat
+ * wrapper flex, jadi seluruh halaman PDF selalu terlihat utuh.
+ */
+function CertThumbnail({ pdf, title }: { pdf: string; title: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  // Ukur ukuran container segera saat mount (bukan menunggu ResizeObserver
+  // pertama kali fire), supaya tidak ada jeda di mana height terbaca 0
+  // -- itu bisa membuat perhitungan displayWidth di bawah jadi 0 dan
+  // sertifikat tidak terlihat sama sekali (tampak "blank/putih").
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      setContainerSize({ width: rect.width, height: rect.height });
+    }
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width <= 0 || height <= 0) continue;
+        // Guard: hanya update kalau perubahan ukuran cukup berarti
+        // (>0.5px), supaya tidak ikut memicu re-render bolak-balik.
+        setContainerSize((prev) =>
+          Math.abs(prev.width - width) < 0.5 &&
+          Math.abs(prev.height - height) < 0.5
+            ? prev
+            : { width, height },
+        );
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // PERBAIKAN: kalau tidak ada path PDF yang valid, jangan render <Document>
+  // sama sekali -- tampilkan placeholder yang jelas, bukan kotak putih kosong.
+  const hasPdf = typeof pdf === "string" && pdf.trim().length > 0;
+
+  // Guard: hanya batasi lebar berdasarkan tinggi container KALAU tinggi
+  // sudah benar-benar terukur (> 0). Selama belum terukur, pakai lebar
+  // container apa adanya supaya tidak pernah menghasilkan displayWidth 0.
+  const displayWidth =
+    aspectRatio && containerSize.height > 0
+      ? Math.max(1, Math.min(containerSize.width, containerSize.height * aspectRatio))
+      : containerSize.width || 400;
+
+  if (!hasPdf || failed) {
+    return (
+      <div
+        ref={containerRef}
+        className="w-full h-full flex items-center justify-center bg-[#E3E3E3]/60">
+        <span className="text-gray-400 text-xs text-center px-3">
+          {title || "Sertifikat tidak tersedia"}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="w-full h-full flex items-center justify-center overflow-hidden">
+      <Document
+        file={pdf}
+        onLoadError={() => setFailed(true)}
+        loading={
+          <div className="w-full h-full flex items-center justify-center bg-[#E3E3E3]/80">
+            <span className="text-gray-400 text-xs">Memuat...</span>
+          </div>
+        }
+        error={
+          <div className="w-full h-full flex items-center justify-center bg-[#E3E3E3]/80">
+            <span className="text-gray-400 text-xs">Gagal memuat</span>
+          </div>
+        }
+        className="flex items-center justify-center">
+        <Page
+          pageNumber={1}
+          width={displayWidth}
+          onLoadSuccess={(page) => {
+            const ratio = page.width / page.height;
+            // PERBAIKAN BUG UTAMA: jangan update state kalau rasio baru
+            // hampir sama dengan yang lama. Tanpa guard ini, perubahan
+            // desimal sekecil apa pun pada rasio (akibat pembulatan saat
+            // <Page> di-render ulang dengan lebar baru) memicu setState
+            // lagi -> render ulang -> lebar berubah lagi -> onLoadSuccess
+            // terpanggil lagi -> loop tanpa henti ("Maximum update depth
+            // exceeded"), yang membuat React menghentikan render paksa
+            // sehingga kanvas PDF tidak sempat selesai digambar (blank).
+            setAspectRatio((prev) =>
+              prev !== null && Math.abs(prev - ratio) < 0.005 ? prev : ratio,
+            );
+          }}
+          onLoadError={() => setFailed(true)}
+          renderAnnotationLayer={false}
+          renderTextLayer={false}
+          loading={null}
+        />
+      </Document>
+    </div>
+  );
+}
+
 export default function PortfolioShowcase() {
   const [activeTab, setActiveTab] = useState<TabType>("projects");
   const [showAllCerts, setShowAllCerts] = useState(false);
@@ -130,6 +250,26 @@ export default function PortfolioShowcase() {
   // Index sertifikat yang sedang di-hover -- dipakai untuk efek "spotlight":
   // card yang di-hover tetap normal, card lain memudar (bukan grayscale).
   const [hoveredCert, setHoveredCert] = useState<number | null>(null);
+
+  // Halaman PDF sertifikat yang sedang aktif di modal detail.
+  const [pdfPage, setPdfPage] = useState(1);
+  const [pdfNumPages, setPdfNumPages] = useState(0);
+
+  // PERBAIKAN: menghitung lebar viewer PDF secara manual (logika
+  // object-fit: contain) alih-alih mengandalkan CSS aspect-ratio.
+  // CSS aspect-ratio TIDAK otomatis menyusutkan lebar saat tinggi dibatasi
+  // max-height -- akibatnya lebar tetap penuh tapi tinggi PDF terpotong
+  // overflow-hidden (ini penyebab bug "masih terpotong" sebelumnya).
+  // Solusinya: ukur lebar container yang tersedia DAN batas tinggi maksimum
+  // (75% tinggi layar) lewat JS, lalu hitung lebar tampil PDF supaya
+  // tinggi hasil render tidak pernah melebihi batas -- persis seperti
+  // gambar yang di-"contain" di dalam box, tidak pernah terpotong.
+  const certViewerRef = useRef<HTMLDivElement>(null);
+  const [availableWidth, setAvailableWidth] = useState(640);
+  const [maxHeightPx, setMaxHeightPx] = useState(() =>
+    typeof window !== "undefined" ? window.innerHeight * 0.75 : 800,
+  );
+  const [pdfAspectRatio, setPdfAspectRatio] = useState<number | null>(null);
 
   const scrollDirectionRef = useScrollDirection();
 
@@ -197,6 +337,64 @@ export default function PortfolioShowcase() {
       document.body.style.overflow = "";
     };
   }, [selectedProject, selectedCertificate]);
+
+  // Reset halaman PDF & rasio aspek tiap kali sertifikat yang dibuka berganti.
+  useEffect(() => {
+    setPdfPage(1);
+    setPdfNumPages(0);
+    setPdfAspectRatio(null);
+  }, [selectedCertificate]);
+
+  // Ukur lebar container viewer sertifikat secara responsif.
+  useEffect(() => {
+    if (!selectedCertificate || !certViewerRef.current) return;
+    const el = certViewerRef.current;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setAvailableWidth(Math.floor(entry.contentRect.width));
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [selectedCertificate]);
+
+  // Ukur batas tinggi maksimum (75% tinggi layar) dan update saat window
+  // di-resize, supaya perhitungan lebar PDF selalu akurat mengikuti
+  // ukuran layar terkini.
+  useEffect(() => {
+    if (!selectedCertificate) return;
+    const updateMaxHeight = () => setMaxHeightPx(window.innerHeight * 0.75);
+    updateMaxHeight();
+    window.addEventListener("resize", updateMaxHeight);
+    return () => window.removeEventListener("resize", updateMaxHeight);
+  }, [selectedCertificate]);
+
+  // Lebar tampil PDF yang sesungguhnya (logika "contain"):
+  // - Kalau PDF potret, tinggi hasil render (width/aspectRatio) bisa
+  //   melebihi maxHeightPx -> maka lebar dibatasi oleh maxHeightPx * aspectRatio.
+  // - Kalau PDF landscape/persegi, availableWidth (lebar container) yang
+  //   jadi batasnya.
+  // Hasilnya: PDF SELALU utuh terlihat pas di dalam box, di halaman mana
+  // pun (setiap ganti halaman, aspectRatio dihitung ulang lewat onLoadSuccess
+  // pada <Page>, sehingga halaman dengan orientasi berbeda tetap pas).
+  const certDisplayWidth =
+    pdfAspectRatio && maxHeightPx > 0
+      ? Math.max(1, Math.min(availableWidth || 640, maxHeightPx * pdfAspectRatio))
+      : availableWidth || 640;
+
+  // Navigasi halaman PDF pakai tombol panah keyboard saat modal terbuka.
+  useEffect(() => {
+    if (!selectedCertificate?.pdf) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        setPdfPage((p) => Math.min(pdfNumPages, p + 1));
+      } else if (e.key === "ArrowLeft") {
+        setPdfPage((p) => Math.max(1, p - 1));
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedCertificate, pdfNumPages]);
 
   const handleCardClick = useCallback((project: ProjectItem) => {
     if (isDragging.current) return;
@@ -396,18 +594,7 @@ export default function PortfolioShowcase() {
                   }}
                   className="group rounded-2xl overflow-hidden border border-black/5 bg-white cursor-pointer transition-shadow duration-300">
                   <div className="relative w-full aspect-[4/3] overflow-hidden bg-white flex items-center justify-center">
-                    {cert.image ? (
-                      <img
-                        src={cert.image}
-                        alt={cert.title}
-                        draggable={false}
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-[#E3E3E3]/80">
-                        <span className="text-gray-400 text-sm">No Image</span>
-                      </div>
-                    )}
+                    <CertThumbnail pdf={cert.pdf} title={cert.title} />
 
                     <div
                       className={`absolute inset-0 bg-white pointer-events-none transition-opacity duration-300 ease-out ${
@@ -498,8 +685,8 @@ export default function PortfolioShowcase() {
               <button
                 onClick={() => setSelectedProject(null)}
                 aria-label="Tutup"
-                className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/55 hover:bg-white/35 text-black transition-colors duration-200">
-                ✕
+                className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-black shadow-md ring-1 ring-black/5 transition-colors duration-200">
+                <X size={16} strokeWidth={2.5} />
               </button>
 
               <div className="w-full h-56 bg-[#E3E3E3] flex items-center justify-center">
@@ -557,7 +744,20 @@ export default function PortfolioShowcase() {
         )}
       </AnimatePresence>
 
-      {/* Modal detail certificate */}
+      {/* Modal detail certificate -- render PDF langsung, dengan navigasi halaman.
+          PERBAIKAN TERBARU: tombol panah kiri/kanan sekarang di-posisikan
+          absolute relatif terhadap `certViewerRef` (jendela/window viewer
+          penuh), BUKAN lagi relatif terhadap div "inner" selebar
+          certDisplayWidth. Dengan begitu tombol selalu menempel di tepi
+          kiri/kanan jendela modal, berapa pun lebar PDF-nya (potret,
+          persegi, atau landscape sempit), alih-alih mengambang dekat tepi
+          kertas seperti sebelumnya.
+
+          Untuk memastikan ikon panah benar-benar presisi di tengah
+          lingkaran tombol, dipakai `grid place-items-center` (bukan
+          flex items-center + justify-center) dan class `shrink-0` pada
+          ikon supaya SVG tidak pernah mengalami distorsi/pergeseran
+          sub-pixel akibat flex-basis. */}
       <AnimatePresence>
         {selectedCertificate && (
           <motion.div
@@ -577,21 +777,81 @@ export default function PortfolioShowcase() {
               <button
                 onClick={() => setSelectedCertificate(null)}
                 aria-label="Tutup"
-                className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-black shadow-md transition-colors duration-200">
-                ✕
+                className="absolute top-3 right-3 z-20 w-8 h-8 grid place-items-center rounded-full bg-white/90 hover:bg-white text-black shadow-md ring-1 ring-black/5 transition-colors duration-200">
+                <X size={16} strokeWidth={2.5} className="shrink-0" />
               </button>
 
-              <div className="w-full max-h-[75vh] bg-[#E3E3E3] flex items-center justify-center overflow-hidden">
-                {selectedCertificate.image ? (
-                  <img
-                    src={selectedCertificate.image}
-                    alt={selectedCertificate.title}
-                    className="w-full max-h-[75vh] object-contain bg-white"
-                  />
-                ) : (
-                  <div className="w-full aspect-[4/3] flex items-center justify-center">
-                    <span className="text-gray-500 text-sm">No Image</span>
-                  </div>
+              <div
+                ref={certViewerRef}
+                className="relative w-full bg-[#E3E3E3] flex items-center justify-center overflow-hidden mx-auto"
+                style={{ maxHeight: "75vh" }}>
+                {/* Wrapper "inner" hanya membungkus dokumen PDF itu sendiri
+                    (lebar = certDisplayWidth), supaya kertas selalu
+                    ter-center secara horizontal di dalam jendela abu-abu. */}
+                <div
+                  className="relative flex items-center justify-center"
+                  style={{ width: certDisplayWidth }}>
+                  <Document
+                    file={selectedCertificate.pdf}
+                    onLoadSuccess={({ numPages }) => setPdfNumPages(numPages)}
+                    loading={
+                      <span className="text-gray-500 text-sm py-20">
+                        Memuat sertifikat...
+                      </span>
+                    }
+                    error={
+                      <span className="text-gray-500 text-sm py-20">
+                        Gagal memuat PDF
+                      </span>
+                    }
+                    className="flex items-center justify-center w-full">
+                    <Page
+                      pageNumber={pdfPage}
+                      width={certDisplayWidth}
+                      onLoadSuccess={(page) => {
+                        const ratio = page.width / page.height;
+                        // Guard sama seperti di CertThumbnail: cegah infinite
+                        // loop setState akibat perubahan rasio yang sangat
+                        // kecil (pembulatan) tiap kali <Page> re-render dengan
+                        // lebar baru.
+                        setPdfAspectRatio((prev) =>
+                          prev !== null && Math.abs(prev - ratio) < 0.005
+                            ? prev
+                            : ratio,
+                        );
+                      }}
+                      renderAnnotationLayer={false}
+                      renderTextLayer={false}
+                    />
+                  </Document>
+                </div>
+
+                {/* Tombol navigasi & indikator halaman kini jadi children
+                    LANGSUNG dari `certViewerRef` (jendela penuh), bukan dari
+                    div "inner" -- sehingga left-4 / right-4 diukur dari tepi
+                    jendela viewer, bukan dari tepi kertas PDF. */}
+                {pdfNumPages > 1 && (
+                  <>
+                    <button
+                      onClick={() => setPdfPage((p) => Math.max(1, p - 1))}
+                      disabled={pdfPage <= 1}
+                      aria-label="Halaman sebelumnya"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 z-10 grid place-items-center w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-md ring-1 ring-black/5 text-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                      <ChevronLeft size={18} strokeWidth={2.5} className="shrink-0" />
+                    </button>
+                    <button
+                      onClick={() =>
+                        setPdfPage((p) => Math.min(pdfNumPages, p + 1))
+                      }
+                      disabled={pdfPage >= pdfNumPages}
+                      aria-label="Halaman berikutnya"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 z-10 grid place-items-center w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-md ring-1 ring-black/5 text-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                      <ChevronRight size={18} strokeWidth={2.5} className="shrink-0" />
+                    </button>
+                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 px-3 py-1 rounded-full bg-black/70 text-white text-xs font-mono tabular-nums shadow-md">
+                      {pdfPage} / {pdfNumPages}
+                    </div>
+                  </>
                 )}
               </div>
 

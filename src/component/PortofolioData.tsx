@@ -12,7 +12,7 @@ export interface CertificateItem {
   issuer: string;
   date: string;
   link?: string | null;
-  image?: string;
+  pdf: string; // path ke file PDF, dirender langsung jadi gambar di web
 }
 
 export const projects: ProjectItem[] = [
@@ -80,28 +80,28 @@ export const certificates: CertificateItem[] = [
     issuer: "BNSP",
     date: "2025",
     link: null,
-    image: "/assets/certificate/BNSP-Pemrograman.png",
+    pdf: "/assets/certificate/BNSP-Pemrograman.pdf",
   },
   {
     title: "Pivot Table In Microsoft Excel",
     issuer: "MySkill",
     date: "2026",
     link: null,
-    image: "/assets/certificate/Pivot-Table.png",
+    pdf: "/assets/certificate/Pivot-Table.pdf",
   },
   {
     title: "Intro To Data Analytics",
     issuer: "Revou",
     date: "2026",
     link: null,
-    image: "/assets/certificate/Intro-To-Data-Analytic.png",
+    pdf: "/assets/certificate/Intro-To-Data-Analytic.pdf",
   },
   {
     title: "Data Analyst & Business Intelligence",
     issuer: "Dibimbing",
     date: "2026",
     link: null,
-    image: "/assets/certificate/DataAnalytic&BusinessIntelligence.png",
+    pdf: "/assets/certificate/DataAnalytic&BusinessIntelligence.pdf",
   },
 ];
 

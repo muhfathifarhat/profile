@@ -133,9 +133,7 @@ function AboutSection() {
     </>
   );
 
-  // Glow MOBILE — posisi pakai persentase relatif (bukan pixel fixed),
-  // supaya selalu center tepat di belakang lingkaran foto berapapun lebar layarnya.
-  // top-[63%] didapat dari cy (244) / height svg (388) ≈ 63%, titik tengah lingkaran foto mobile.
+  // Glow MOBILE 
   const PhotoTrapezoidBackgroundMobile = () => (
     <>
       {/* Outer Glow */}
@@ -388,10 +386,10 @@ function AboutSection() {
                   />
                   <div className="flex flex-col gap-2 items-start text-left">
                     <p className="text-[#d4d4d4] font-light font-mono text-xs lg:text-sm leading-relaxed max-w-xs lg:max-w-sm text-left">
-                      Fresh graduate jurusan Teknik Informatika dengan passion
-                      di bindang data analysis. Terlatih dalam pengembangan web
-                      dan Internet of Things (IoT). Berfokus pada data cleaning,
-                      analisis statistik, dan visualisasi.
+                      Lulusan S1 Teknik Informatika Universitas Pamulang
+                      dengan antusiasme tinggi untuk berkarier sebagai Data Analyst.
+                      Menguasai SQL, Python, serta perangkat visualisasi
+                      seperti Tableau dan Microsoft Excel.
                     </p>
                   </div>
                 </div>
@@ -406,7 +404,7 @@ function AboutSection() {
         </div>
 
         {/* STATS CARD */}
-        <div className="md:pt-10 md:col-span-12 bg-black">
+        <div className="md:pt-10 lg:pt-0 md:col-span-12 bg-black">
           <div className="w-full md:w-11/12 lg:w-4/5 mx-auto">
             <StatsCard />
           </div>
