@@ -2,12 +2,32 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import type { IconType } from "react-icons";
-import { SiReact, SiJavascript, SiTypescript, SiTailwindcss, SiPython, SiMysql, SiPandas, } from "react-icons/si";
-import { FileSpreadsheet, BarChart3, PieChart, ChevronLeft, ChevronRight, X } from "lucide-react";
+import {
+  SiReact,
+  SiJavascript,
+  SiTypescript,
+  SiTailwindcss,
+  SiPython,
+  SiMysql,
+  SiPandas,
+} from "react-icons/si";
+import {
+  FileSpreadsheet,
+  BarChart3,
+  PieChart,
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from "lucide-react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import { projects, certificates, type ProjectItem, type CertificateItem } from "./PortofolioData";
+import {
+  projects,
+  certificates,
+  type ProjectItem,
+  type CertificateItem,
+} from "./PortofolioData";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -179,7 +199,10 @@ function CertThumbnail({ pdf, title }: { pdf: string; title: string }) {
   // container apa adanya supaya tidak pernah menghasilkan displayWidth 0.
   const displayWidth =
     aspectRatio && containerSize.height > 0
-      ? Math.max(1, Math.min(containerSize.width, containerSize.height * aspectRatio))
+      ? Math.max(
+          1,
+          Math.min(containerSize.width, containerSize.height * aspectRatio),
+        )
       : containerSize.width || 400;
 
   if (!hasPdf || failed) {
@@ -379,7 +402,10 @@ export default function PortfolioShowcase() {
   // pada <Page>, sehingga halaman dengan orientasi berbeda tetap pas).
   const certDisplayWidth =
     pdfAspectRatio && maxHeightPx > 0
-      ? Math.max(1, Math.min(availableWidth || 640, maxHeightPx * pdfAspectRatio))
+      ? Math.max(
+          1,
+          Math.min(availableWidth || 640, maxHeightPx * pdfAspectRatio),
+        )
       : availableWidth || 640;
 
   // Navigasi halaman PDF pakai tombol panah keyboard saat modal terbuka.
@@ -604,8 +630,8 @@ export default function PortfolioShowcase() {
                       }`}
                     />
 
-                    <div className="absolute inset-x-0 bottom-0 p-2 sm:p-4 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 ease-out">
-                      <p className="text-white text-[11px] sm:text-sm font-semibold leading-snug line-clamp-2">
+                    <div className="absolute inset-x-0 bottom-0 h-2/3 flex items-end justify-center p-2 sm:p-4 bg-gradient-to-t from-black/80 via-black/45 via-40% to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 ease-out">
+                      <p className="text-white text-[11px] sm:text-sm font-semibold leading-snug line-clamp-2 [text-shadow:0_1px_3px_rgba(0,0,0,0.8)]">
                         {cert.title}
                       </p>
                     </div>
@@ -837,7 +863,11 @@ export default function PortfolioShowcase() {
                       disabled={pdfPage <= 1}
                       aria-label="Halaman sebelumnya"
                       className="absolute left-4 top-1/2 -translate-y-1/2 z-10 grid place-items-center w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-md ring-1 ring-black/5 text-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                      <ChevronLeft size={18} strokeWidth={2.5} className="shrink-0" />
+                      <ChevronLeft
+                        size={18}
+                        strokeWidth={2.5}
+                        className="shrink-0"
+                      />
                     </button>
                     <button
                       onClick={() =>
@@ -846,7 +876,11 @@ export default function PortfolioShowcase() {
                       disabled={pdfPage >= pdfNumPages}
                       aria-label="Halaman berikutnya"
                       className="absolute right-4 top-1/2 -translate-y-1/2 z-10 grid place-items-center w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-md ring-1 ring-black/5 text-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                      <ChevronRight size={18} strokeWidth={2.5} className="shrink-0" />
+                      <ChevronRight
+                        size={18}
+                        strokeWidth={2.5}
+                        className="shrink-0"
+                      />
                     </button>
                     <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 px-3 py-1 rounded-full bg-black/70 text-white text-xs font-mono tabular-nums shadow-md">
                       {pdfPage} / {pdfNumPages}
