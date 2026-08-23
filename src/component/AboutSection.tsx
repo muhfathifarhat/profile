@@ -236,7 +236,7 @@ function AboutSection() {
         </div>
 
         {/* KIRI - Foto Desktop */}
-        <div className="relative hidden md:flex md:col-span-6 items-center justify-center mt-20">
+        <div className="relative hidden md:flex md:col-span-6 items-center justify-center lg:mt-20">
           {/* BACKGROUND GRID — versi Desktop (posisi pixel fixed) */}
           <PhotoTrapezoidBackground />
           <PhotoGridBackground />
@@ -404,7 +404,7 @@ function AboutSection() {
         </div>
 
         {/* STATS CARD */}
-        <div className="md:pt-10 lg:pt-0 md:col-span-12 bg-black">
+        <div className="md:pt-10 lg:pt-0 md:col-span-12 bg-black md:mt-12">
           <div className="w-full md:w-11/12 lg:w-4/5 mx-auto">
             <StatsCard />
           </div>
