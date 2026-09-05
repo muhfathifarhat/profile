@@ -25,4 +25,4 @@ Website ini dibuat sebagai pusat informasi profesional saya, mencakup:
 
 ---
 
-<p align="center"><i>Terima kasih sudah berkunjung! ⭐ Jangan lupa beri star kalau project ini bermanfaat.</i></p>
+<p align="center"><i>Terima kasih sudah berkunjung! :*</i></p>
